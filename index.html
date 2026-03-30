@@ -309,7 +309,7 @@
 //  CONFIGURAÇÃO — edite após implantar o Apps Script
 // ═══════════════════════════════════════════════
 const CONFIG = {
-  apiUrl:  'https://script.google.com/macros/s/AKfycbynjToNnUF7zF9G7sCzZXHpCG8Ud9RpH3idKA5pk0bUYwrIuC_6F9Ru_JoceoeRQ3oz/exec',
+  apiUrl:     'https://script.google.com/macros/s/AKfycbynjToNnUF7zF9G7sCzZXHpCG8Ud9RpH3idKA5pk0bUYwrIuC_6F9Ru_JoceoeRQ3oz/exec',
   refreshSec: 180,
   useMock:    false,   // → false quando a URL estiver configurada
 };
@@ -553,7 +553,7 @@ function fetchDados() {
     const timeout = setTimeout(() => {
       cleanup();
       reject(new Error('Timeout JSONP'));
-    }, 20000);
+    }, 45000);
 
     function cleanup() {
       clearTimeout(timeout);
