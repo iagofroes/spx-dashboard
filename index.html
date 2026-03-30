@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPX · Painel de Esteiras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #090c10;
+    --surface:  #0f1419;
+    --border:   #1e2733;
+    --muted:    #2a3444;
+    --text-dim: #4a6080;
+    --text:     #8aa4c0;
+    --text-hi:  #c8dff2;
+    --accent:   #00d4ff;
+    --green:    #00e676;
+    --yellow:   #ffd600;
+    --red:      #ff3d5a;
+
+    --amarela:  #ffd600;
+    --vermelha: #ff3d5a;
+    --rolete:   #00d4ff;
+    --analisar: #b388ff;
+    --outros:   #69f0ae;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow Condensed', sans-serif;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 999; pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px, transparent 3px,
+      rgba(0,0,0,.07) 3px, rgba(0,0,0,.07) 4px
+    );
+  }
+
+  .shell {
+    display: grid;
+    grid-template-rows: 62px 1fr 48px;
+    height: 100vh;
+    padding: 10px 14px 8px;
+    gap: 8px;
+  }
+
+  /* HEADER */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+
+  .logo { font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700; color: var(--accent); }
+  .logo span { color: var(--text-dim); }
+  .facility { font-size: 12px; letter-spacing: 2.5px; color: var(--text-dim); text-transform: uppercase; margin-left: 12px; }
+
+  .hdr-kpis { display: flex; align-items: center; gap: 28px; }
+  .kpi { display: flex; flex-direction: column; align-items: flex-end; }
+  .kpi .lbl { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); }
+  .kpi .val { font-family: 'Space Mono', monospace; font-size: 24px; font-weight: 700; line-height: 1; color: var(--text-hi); }
+  .kpi .val.accent { color: var(--accent); }
+  .kpi .val.green  { color: var(--green); }
+
+  .clock { font-family: 'Space Mono', monospace; font-size: 30px; font-weight: 700; color: var(--text-hi); letter-spacing: 2px; }
+
+  /* MAIN GRID */
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 260px;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  /* ESTEIRA CARD */
+  .esteira-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: flex; flex-direction: column;
+    overflow: hidden; position: relative;
+  }
+
+  .esteira-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+
+  .amarela::before  { background: var(--amarela);  box-shadow: 0 0 12px var(--amarela); }
+  .vermelha::before { background: var(--vermelha); box-shadow: 0 0 12px var(--vermelha); }
+  .rolete::before   { background: var(--rolete);   box-shadow: 0 0 12px var(--rolete); }
+  .analisar::before { background: var(--analisar); box-shadow: 0 0 12px var(--analisar); }
+  .outros::before   { background: var(--outros); }
+
+  .card-head {
+    padding: 10px 12px 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .card-title { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+  .amarela  .card-title { color: var(--amarela); }
+  .vermelha .card-title { color: var(--vermelha); }
+  .rolete   .card-title { color: var(--rolete); }
+  .analisar .card-title { color: var(--analisar); }
+  .outros   .card-title { color: var(--outros); }
+
+  .status-badge { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; padding: 2px 7px; border-radius: 2px; text-transform: uppercase; }
+  .badge-ok   { background: rgba(0,230,118,.15); color: var(--green); }
+  .badge-warn { background: rgba(255,214,0,.15);  color: var(--yellow); }
+  .badge-low  { background: rgba(255,61,90,.15);  color: var(--red); }
+  .badge-na   { background: rgba(74,96,128,.15);  color: var(--text-dim); }
+
+  .card-body { padding: 10px 12px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+  .big-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 1px; }
+  .big-row   { display: flex; align-items: baseline; justify-content: space-between; }
+  .big-num   { font-family: 'Space Mono', monospace; font-size: 48px; font-weight: 700; line-height: 1; color: var(--text-hi); }
+  .big-sub   { font-family: 'Space Mono', monospace; font-size: 17px; color: var(--text-dim); text-align: right; }
+
+  .prog-area { display: flex; flex-direction: column; gap: 3px; }
+  .prog-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); font-family: 'Space Mono', monospace; }
+  .prog-track { height: 7px; background: var(--muted); border-radius: 2px; overflow: hidden; }
+  .prog-fill  { height: 100%; border-radius: 2px; transition: width .8s ease; }
+  .amarela  .prog-fill { background: var(--amarela); }
+  .vermelha .prog-fill { background: var(--vermelha); }
+  .rolete   .prog-fill { background: var(--rolete); }
+  .analisar .prog-fill { background: var(--analisar); }
+  .outros   .prog-fill { background: var(--outros); }
+
+  .mini-chart { display: flex; align-items: flex-end; gap: 2px; height: 44px; }
+  .mini-bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; height: 100%; justify-content: flex-end; }
+  .mini-bar { width: 100%; border-radius: 1px 1px 0 0; min-height: 3px; opacity: .55; transition: height .4s; }
+  .mini-bar.current { opacity: 1; filter: brightness(1.4); }
+  .amarela  .mini-bar { background: var(--amarela); }
+  .vermelha .mini-bar { background: var(--vermelha); }
+  .rolete   .mini-bar { background: var(--rolete); }
+  .analisar .mini-bar { background: var(--analisar); }
+  .outros   .mini-bar { background: var(--outros); }
+  .mini-h-lbl { font-size: 8px; color: var(--text-dim); font-family: 'Space Mono', monospace; }
+
+  .section-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 2px; }
+  .divider { height: 1px; background: var(--border); margin: 2px 0; }
+
+  .top-ops { display: flex; flex-direction: column; gap: 3px; }
+  .top-op-row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
+  .top-op-name { color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+  .top-op-val  { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-hi); flex-shrink: 0; }
+
+  /* projeção + hora fechada */
+  .proj-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .proj-box {
+    background: rgba(0,0,0,.25);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .proj-box .pb-lbl {
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .proj-box .pb-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text-hi);
+  }
+
+  .proj-box .pb-val.up   { color: var(--green); }
+  .proj-box .pb-val.down { color: var(--red); }
+  .proj-box .pb-val.same { color: var(--yellow); }
+
+  .proj-box .pb-sub {
+    font-size: 9px;
+    color: var(--text-dim);
+  }
+
+  /* seta tendência */
+  .trend { font-size: 13px; margin-left: 3px; vertical-align: middle; }
+  .trend.up   { color: var(--green); }
+  .trend.down { color: var(--red); }
+  .trend.same { color: var(--yellow); }
+
+  /* RIGHT COL */
+  .right-col { display: flex; flex-direction: column; gap: 8px; }
+
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .panel-head { padding: 8px 12px; border-bottom: 1px solid var(--border); font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); background: rgba(0,212,255,.03); }
+
+  .hour-chart-wrap { padding: 10px 10px 6px; }
+  .hour-chart { display: flex; align-items: flex-end; gap: 3px; height: 72px; }
+  .h-grp { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; height: 100%; justify-content: flex-end; }
+  .h-bar { width: 100%; border-radius: 2px 2px 0 0; background: var(--accent); opacity: .5; min-height: 3px; transition: height .4s; }
+  .h-bar.current { opacity: 1; box-shadow: 0 0 8px rgba(0,212,255,.5); }
+  .h-lbl { font-size: 8px; color: var(--text-dim); font-family: 'Space Mono', monospace; }
+
+  .mini-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 12px; }
+  .mini-stat { display: flex; flex-direction: column; }
+  .mini-stat .ms-lbl { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); }
+  .mini-stat .ms-val { font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700; line-height: 1.1; color: var(--text-hi); }
+  .mini-stat .ms-val.green  { color: var(--green); }
+  .mini-stat .ms-val.accent { color: var(--accent); }
+  .mini-stat .ms-val.yellow { color: var(--yellow); }
+
+  .rank-list { padding: 4px 0; }
+  .rank-row { display: flex; align-items: center; padding: 5px 12px; border-bottom: 1px solid rgba(30,39,51,.5); gap: 8px; }
+  .rank-n { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); width: 16px; flex-shrink: 0; }
+  .rank-n.gold   { color: #ffd600; }
+  .rank-n.silver { color: #b0bec5; }
+  .rank-n.bronze { color: #a1887f; }
+  .rank-name { flex: 1; font-size: 12px; color: var(--text-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rank-val  { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--green); flex-shrink: 0; }
+
+  /* dot */
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; animation: pulse 2s ease-in-out infinite; }
+  .dot.green { background: var(--green); box-shadow: 0 0 5px var(--green); }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+  /* FOOTER */
+  footer {
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid var(--border); padding-top: 6px;
+    font-size: 10px; color: var(--text-dim); font-family: 'Space Mono', monospace;
+  }
+  .footer-left { display: flex; gap: 20px; align-items: center; }
+  .flash { color: var(--accent); opacity: 0; transition: opacity .3s; }
+  .flash.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header>
+    <div style="display:flex;align-items:baseline">
+      <div class="logo">SPX<span>·</span>OPS</div>
+      <div class="facility">SoC_BA · Simões Filho</div>
+    </div>
+    <div class="hdr-kpis">
+      <div class="kpi"><span class="lbl">Total Dia</span><span class="val accent" id="hdr-total">—</span></div>
+      <div class="kpi"><span class="lbl">Hora Atual</span><span class="val green" id="hdr-hora">—</span></div>
+      <div class="kpi"><span class="lbl">Meta Hora</span><span class="val" id="hdr-meta">—</span></div>
+      <div class="kpi"><span class="lbl">Projeção Geral</span><span class="val" id="hdr-proj" style="color:var(--orange)">—</span></div>
+      <div class="clock" id="clock">--:--:--</div>
+    </div>
+  </header>
+
+  <div class="main" id="main-grid">
+    <div class="right-col" id="right-col" style="display:none">
+      <div class="panel">
+        <div class="panel-head">Produção por Hora</div>
+        <div class="hour-chart-wrap"><div class="hour-chart" id="hour-chart"></div></div>
+      </div>
+      <div class="panel">
+        <div class="mini-stats">
+          <div class="mini-stat"><span class="ms-lbl">Melhor Hora</span><span class="ms-val green" id="best-h-val">—</span><span style="font-size:10px;color:var(--text-dim)" id="best-h-lbl">—</span></div>
+          <div class="mini-stat"><span class="ms-lbl">% Meta</span><span class="ms-val yellow" id="pct-meta">—</span></div>
+          <div class="mini-stat"><span class="ms-lbl">Esteiras OK</span><span class="ms-val accent" id="ok-count">—</span></div>
+          <div class="mini-stat"><span class="ms-lbl">Em Atenção</span><span class="ms-val" style="color:var(--red)" id="warn-count">—</span></div>
+        </div>
+      </div>
+      <div class="panel" style="flex:1;overflow:hidden">
+        <div class="panel-head">Top Operadores</div>
+        <div class="rank-list" id="rank-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-left">
+      <span><span class="dot green"></span>ONLINE</span>
+      <span id="fonte-label">SIMULAÇÃO</span>
+      <span id="last-update">—</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <span class="flash" id="flash">↻ ATUALIZADO</span>
+      <span>PRÓXIMO: <span id="countdown">180</span>s</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  CONFIGURAÇÃO
+// ═══════════════════════════════════════
+const CONFIG = {
+  apiUrl:     'SUA_URL_DO_APPS_SCRIPT_AQUI',
+  refreshSec: 180,
+  useMock:    true,
+};
+
+// ── helpers ─────────────────────────────
+function classEsteira(nome) {
+  const n = (nome || '').toLowerCase();
+  if (n.includes('amarela'))  return 'amarela';
+  if (n.includes('vermelha')) return 'vermelha';
+  if (n.includes('rolete'))   return 'rolete';
+  if (n.includes('anali'))    return 'analisar';
+  return 'outros';
+}
+
+function nomeEsteira(nome) {
+  return nome.replace(/^esteira\s+/i, '').toUpperCase();
+}
+
+function badge(pct) {
+  if (pct === null || pct === undefined) return '<span class="status-badge badge-na">S/META</span>';
+  if (pct >= 85) return '<span class="status-badge badge-ok">OK</span>';
+  if (pct >= 60) return '<span class="status-badge badge-warn">ATENÇÃO</span>';
+  return '<span class="status-badge badge-low">BAIXO</span>';
+}
+
+// ── render cards ────────────────────────
+function renderCards(data) {
+  const grid     = document.getElementById('main-grid');
+  const rightCol = document.getElementById('right-col');
+
+  [...grid.children].forEach(c => { if (c.id !== 'right-col') c.remove(); });
+
+  data.esteiras.forEach(est => {
+    const cls  = classEsteira(est.estacao);
+    const pct  = est.pctMeta;
+    const pctW = pct != null ? Math.min(100, pct) : 0;
+
+    const maxH = Math.max(...est.historico.map(h => h.total), 1);
+    const miniBars = est.historico.map(h => {
+      const p   = (h.total / maxH * 100).toFixed(1);
+      const cur = h.hora === data.horaAtual;
+      return `<div class="mini-bar-group">
+        <div class="mini-bar${cur ? ' current' : ''}" style="height:${p}%"></div>
+        <div class="mini-h-lbl">${String(h.hora).padStart(2,'0')}</div>
+      </div>`;
+    }).join('');
+
+    const topOpsHtml = est.topOperadores.map(op =>
+      `<div class="top-op-row">
+        <span class="top-op-name">${op.nome}</span>
+        <span class="top-op-val">${op.qtd.toLocaleString('pt-BR')}</span>
+      </div>`
+    ).join('');
+
+    // ── projeção da hora cheia ──────────────────────────────
+    const now         = new Date();
+    const minDecor    = now.getMinutes() + (now.getSeconds() / 60);
+    const minRestantes = 60 - minDecor;
+    const projecao    = minDecor > 0
+      ? Math.round((est.horaAtual / minDecor) * 60)
+      : est.horaAtual;
+
+    // hora anterior fechada (hora - 1)
+    const horaAnterior  = data.horaAtual - 1;
+    const horaFechada   = est.historico.find(h => h.hora === horaAnterior);
+    const valorFechado  = horaFechada ? horaFechada.total : null;
+
+    // tendência: projeção vs hora fechada anterior
+    let trendClass = 'same', trendSeta = '→';
+    if (valorFechado != null) {
+      const diff = projecao - valorFechado;
+      if (diff > valorFechado * 0.05)       { trendClass = 'up';   trendSeta = '↑'; }
+      else if (diff < -(valorFechado * 0.05)) { trendClass = 'down'; trendSeta = '↓'; }
+    }
+
+    // projeção vs meta
+    let projClass = 'same';
+    if (est.metaHora > 0) {
+      if (projecao >= est.metaHora * 0.85)   projClass = 'up';
+      else if (projecao < est.metaHora * 0.6) projClass = 'down';
+      else                                     projClass = 'same';
+    }
+
+    const card = document.createElement('div');
+    card.className = `esteira-card ${cls}`;
+    card.innerHTML = `
+      <div class="card-head">
+        <span class="card-title">${nomeEsteira(est.estacao)}</span>
+        ${badge(pct)}
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="big-label">HORA ATUAL (${String(data.horaAtual).padStart(2,'0')}h)</div>
+          <div class="big-row">
+            <div class="big-num">${est.horaAtual.toLocaleString('pt-BR')}</div>
+            <div>
+              <div class="big-label" style="text-align:right">ACUMULADO</div>
+              <div class="big-sub">${est.totalDia.toLocaleString('pt-BR')}</div>
+            </div>
+          </div>
+        </div>
+        <div class="prog-area">
+          <div class="prog-labels">
+            <span>${pct != null ? pct + '% meta' : 'sem meta'}</span>
+            <span>alvo: ${est.metaHora > 0 ? est.metaHora.toLocaleString('pt-BR') : '—'}</span>
+          </div>
+          <div class="prog-track"><div class="prog-fill" style="width:${pctW}%"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="proj-row">
+          <div class="proj-box">
+            <span class="pb-lbl">⟳ Projeção Hora Cheia</span>
+            <span class="pb-val ${projClass}">${projecao.toLocaleString('pt-BR')}<span class="trend ${trendClass}">${trendSeta}</span></span>
+            <span class="pb-sub">ritmo: ${Math.round(est.horaAtual / Math.max(1, minDecor))}/min · ${Math.round(minRestantes)}min restantes</span>
+          </div>
+          <div class="proj-box">
+            <span class="pb-lbl">✓ Hora ${horaAnterior > 0 ? String(horaAnterior).padStart(2,'0')+'h (fechada)' : 'anterior'}</span>
+            <span class="pb-val">${valorFechado != null ? valorFechado.toLocaleString('pt-BR') : '—'}</span>
+            <span class="pb-sub">${valorFechado != null && est.metaHora > 0 ? Math.round(valorFechado / est.metaHora * 100) + '% da meta' : 'sem referência'}</span>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div>
+          <div class="section-label">Histórico do Turno</div>
+          <div class="mini-chart">${miniBars}</div>
+        </div>
+        <div>
+          <div class="section-label">Top Operadores</div>
+          <div class="top-ops">${topOpsHtml || '<span style="font-size:11px;color:var(--text-dim)">sem dados</span>'}</div>
+        </div>
+      </div>
+    `;
+    grid.insertBefore(card, rightCol);
+  });
+
+  rightCol.style.display = 'flex';
+}
+
+function renderKPIs(data) {
+  document.getElementById('hdr-total').textContent = data.totalGeralDia.toLocaleString('pt-BR');
+  document.getElementById('hdr-hora').textContent  = data.totalGeralHora.toLocaleString('pt-BR');
+  document.getElementById('hdr-meta').textContent  = data.metaHoraAtual > 0 ? data.metaHoraAtual.toLocaleString('pt-BR') : '—';
+
+  // projeção geral
+  const now      = new Date();
+  const minDecor = now.getMinutes() + (now.getSeconds() / 60);
+  const projGeral = minDecor > 0 ? Math.round((data.totalGeralHora / minDecor) * 60) : data.totalGeralHora;
+  document.getElementById('hdr-proj').textContent = projGeral.toLocaleString('pt-BR');
+  // cor baseada na meta
+  const projEl = document.getElementById('hdr-proj');
+  if (data.metaHoraAtual > 0) {
+    const r = projGeral / data.metaHoraAtual;
+    projEl.style.color = r >= 0.85 ? 'var(--green)' : r >= 0.6 ? 'var(--yellow)' : 'var(--red)';
+  }
+
+  const pctG = data.metaHoraAtual > 0 ? Math.round(data.totalGeralHora / data.metaHoraAtual * 100) : null;
+  document.getElementById('pct-meta').textContent = pctG != null ? pctG + '%' : '—';
+
+  document.getElementById('ok-count').textContent   = data.esteiras.filter(e => e.pctMeta != null && e.pctMeta >= 85).length;
+  document.getElementById('warn-count').textContent = data.esteiras.filter(e => e.pctMeta != null && e.pctMeta < 60).length;
+}
+
+function renderHourChart(data) {
+  const chart = document.getElementById('hour-chart');
+  chart.innerHTML = '';
+  const hist = data.historicoGeral;
+  const max  = Math.max(...hist.map(h => h.total), 1);
+
+  hist.forEach(h => {
+    const p   = (h.total / max * 100).toFixed(1);
+    const cur = h.hora === data.horaAtual;
+    const div = document.createElement('div');
+    div.className = 'h-grp';
+    div.innerHTML = `<div class="h-bar${cur ? ' current' : ''}" style="height:${p}%"></div><div class="h-lbl">${String(h.hora).padStart(2,'0')}</div>`;
+    chart.appendChild(div);
+  });
+
+  const best = hist.reduce((a, b) => a.total > b.total ? a : b, { hora: 0, total: 0 });
+  document.getElementById('best-h-val').textContent = best.total.toLocaleString('pt-BR');
+  document.getElementById('best-h-lbl').textContent = `${String(best.hora).padStart(2,'0')}:00h`;
+}
+
+function renderTopOps(data) {
+  const agg = {};
+  data.esteiras.forEach(est => {
+    est.topOperadores.forEach(op => { agg[op.nome] = (agg[op.nome] || 0) + op.qtd; });
+  });
+
+  const sorted  = Object.entries(agg).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  const medals  = ['gold', 'silver', 'bronze'];
+  const nums    = ['①', '②', '③'];
+
+  document.getElementById('rank-list').innerHTML = sorted.map(([nome, qtd], i) => `
+    <div class="rank-row">
+      <span class="rank-n ${medals[i] || ''}">${nums[i] || (i + 1)}</span>
+      <span class="rank-name">${nome}</span>
+      <span class="rank-val">${qtd.toLocaleString('pt-BR')}</span>
+    </div>
+  `).join('');
+}
+
+// ── mock ────────────────────────────────
+function gerarMock() {
+  const hora     = new Date().getHours();
+  const esteiras = ['Esteira Amarela', 'Esteira Vermelha', 'Esteira Rolete', 'Analisar Esteiras'];
+  const metaHora = 450;
+  const historicoGeral = {};
+
+  const dadosEsteiras = esteiras.map(nome => {
+    const pctPerf   = 0.55 + Math.random() * 0.65;
+    const horaAtual = Math.round(metaHora * pctPerf);
+    const historico = [];
+
+    for (let h = 8; h <= Math.min(hora, 21); h++) {
+      const v = Math.round(metaHora * (0.5 + Math.random() * 0.8));
+      historico.push({ hora: h, total: v });
+      historicoGeral[h] = (historicoGeral[h] || 0) + v;
+    }
+
+    const nomes = ['ANA LENIRA', 'JESSICA VIANA', 'JHONATA MOURA', 'MARCELO JUNIOR', 'LUANA ARAUJO'];
+    const topOperadores = nomes.slice(0, 3).map(n => ({ nome: n, qtd: Math.round(80 + Math.random() * 200) }));
+
+    return {
+      estacao: nome, horaAtual,
+      totalDia: Math.round(horaAtual * Math.max(1, hora - 7) * (0.8 + Math.random() * 0.3)),
+      metaHora, pctMeta: Math.round(horaAtual / metaHora * 100),
+      topOperadores, historico
+    };
+  });
+
+  return {
+    timestamp: new Date().toISOString(),
+    horaAtual: hora, metaHoraAtual: metaHora * esteiras.length,
+    totalGeralDia:  dadosEsteiras.reduce((s, e) => s + e.totalDia, 0),
+    totalGeralHora: dadosEsteiras.reduce((s, e) => s + e.horaAtual, 0),
+    esteiras: dadosEsteiras,
+    historicoGeral: Object.entries(historicoGeral)
+      .map(([h, v]) => ({ hora: parseInt(h), total: v }))
+      .sort((a, b) => a.hora - b.hora)
+  };
+}
+
+// ── fetch real ──────────────────────────
+async function fetchDados() {
+  const res  = await fetch(CONFIG.apiUrl);
+  const data = await res.json();
+  if (data.erro) throw new Error(data.erro);
+  return data;
+}
+
+// ── load ────────────────────────────────
+async function loadData() {
+  try {
+    const data = CONFIG.useMock ? gerarMock() : await fetchDados();
+    renderCards(data);
+    renderKPIs(data);
+    renderHourChart(data);
+    renderTopOps(data);
+
+    document.getElementById('last-update').textContent =
+      'atualizado ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('fonte-label').textContent = CONFIG.useMock ? 'SIMULAÇÃO' : 'APPS SCRIPT';
+
+    const f = document.getElementById('flash');
+    f.classList.add('show');
+    setTimeout(() => f.classList.remove('show'), 2500);
+  } catch (e) { console.error('Erro:', e); }
+}
+
+function updateClock() {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString('pt-BR', { hour12: false });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+let cd = CONFIG.refreshSec;
+setInterval(() => {
+  cd--;
+  document.getElementById('countdown').textContent = cd;
+  if (cd <= 0) { cd = CONFIG.refreshSec; loadData(); }
+}, 1000);
+
+loadData();
+</script>
+</body>
+</html>
