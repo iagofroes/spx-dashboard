@@ -19,11 +19,13 @@
     --green:    #00e676;
     --yellow:   #ffd600;
     --red:      #ff3d5a;
-
+    --orange:   #ff7043;
     --amarela:  #ffd600;
     --vermelha: #ff3d5a;
     --rolete:   #00d4ff;
     --analisar: #b388ff;
+    --branca:   #e0e0e0;
+    --azul:     #448aff;
     --outros:   #69f0ae;
   }
 
@@ -42,285 +44,286 @@
     content: '';
     position: fixed; inset: 0; z-index: 999; pointer-events: none;
     background: repeating-linear-gradient(
-      to bottom,
-      transparent 0px, transparent 3px,
+      to bottom, transparent 0px, transparent 3px,
       rgba(0,0,0,.07) 3px, rgba(0,0,0,.07) 4px
     );
   }
 
+  /* ── SHELL ── */
   .shell {
     display: grid;
-    grid-template-rows: 62px 1fr 48px;
+    grid-template-rows: 58px 1fr 44px;
     height: 100vh;
-    padding: 10px 14px 8px;
-    gap: 8px;
-  }
-
-  /* HEADER */
-  header {
-    display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 8px;
-  }
-
-  .logo { font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700; color: var(--accent); }
-  .logo span { color: var(--text-dim); }
-  .facility { font-size: 12px; letter-spacing: 2.5px; color: var(--text-dim); text-transform: uppercase; margin-left: 12px; }
-
-  .hdr-kpis { display: flex; align-items: center; gap: 28px; }
-  .kpi { display: flex; flex-direction: column; align-items: flex-end; }
-  .kpi .lbl { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); }
-  .kpi .val { font-family: 'Space Mono', monospace; font-size: 24px; font-weight: 700; line-height: 1; color: var(--text-hi); }
-  .kpi .val.accent { color: var(--accent); }
-  .kpi .val.green  { color: var(--green); }
-
-  .clock { font-family: 'Space Mono', monospace; font-size: 30px; font-weight: 700; color: var(--text-hi); letter-spacing: 2px; }
-
-  /* MAIN GRID */
-  .main {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 260px;
-    gap: 8px;
-    overflow: hidden;
-  }
-
-  /* ESTEIRA CARD */
-  .esteira-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    display: flex; flex-direction: column;
-    overflow: hidden; position: relative;
-  }
-
-  .esteira-card::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  }
-
-  .amarela::before  { background: var(--amarela);  box-shadow: 0 0 12px var(--amarela); }
-  .vermelha::before { background: var(--vermelha); box-shadow: 0 0 12px var(--vermelha); }
-  .rolete::before   { background: var(--rolete);   box-shadow: 0 0 12px var(--rolete); }
-  .analisar::before { background: var(--analisar); box-shadow: 0 0 12px var(--analisar); }
-  .outros::before   { background: var(--outros); }
-
-  .card-head {
-    padding: 10px 12px 8px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-  }
-
-  .card-title { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
-  .amarela  .card-title { color: var(--amarela); }
-  .vermelha .card-title { color: var(--vermelha); }
-  .rolete   .card-title { color: var(--rolete); }
-  .analisar .card-title { color: var(--analisar); }
-  .outros   .card-title { color: var(--outros); }
-
-  .status-badge { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; padding: 2px 7px; border-radius: 2px; text-transform: uppercase; }
-  .badge-ok   { background: rgba(0,230,118,.15); color: var(--green); }
-  .badge-warn { background: rgba(255,214,0,.15);  color: var(--yellow); }
-  .badge-low  { background: rgba(255,61,90,.15);  color: var(--red); }
-  .badge-na   { background: rgba(74,96,128,.15);  color: var(--text-dim); }
-
-  .card-body { padding: 10px 12px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
-
-  .big-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 1px; }
-  .big-row   { display: flex; align-items: baseline; justify-content: space-between; }
-  .big-num   { font-family: 'Space Mono', monospace; font-size: 48px; font-weight: 700; line-height: 1; color: var(--text-hi); }
-  .big-sub   { font-family: 'Space Mono', monospace; font-size: 17px; color: var(--text-dim); text-align: right; }
-
-  .prog-area { display: flex; flex-direction: column; gap: 3px; }
-  .prog-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); font-family: 'Space Mono', monospace; }
-  .prog-track { height: 7px; background: var(--muted); border-radius: 2px; overflow: hidden; }
-  .prog-fill  { height: 100%; border-radius: 2px; transition: width .8s ease; }
-  .amarela  .prog-fill { background: var(--amarela); }
-  .vermelha .prog-fill { background: var(--vermelha); }
-  .rolete   .prog-fill { background: var(--rolete); }
-  .analisar .prog-fill { background: var(--analisar); }
-  .outros   .prog-fill { background: var(--outros); }
-
-  .mini-chart { display: flex; align-items: flex-end; gap: 2px; height: 44px; }
-  .mini-bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; height: 100%; justify-content: flex-end; }
-  .mini-bar { width: 100%; border-radius: 1px 1px 0 0; min-height: 3px; opacity: .55; transition: height .4s; }
-  .mini-bar.current { opacity: 1; filter: brightness(1.4); }
-  .amarela  .mini-bar { background: var(--amarela); }
-  .vermelha .mini-bar { background: var(--vermelha); }
-  .rolete   .mini-bar { background: var(--rolete); }
-  .analisar .mini-bar { background: var(--analisar); }
-  .outros   .mini-bar { background: var(--outros); }
-  .mini-h-lbl { font-size: 8px; color: var(--text-dim); font-family: 'Space Mono', monospace; }
-
-  .section-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 2px; }
-  .divider { height: 1px; background: var(--border); margin: 2px 0; }
-
-  .top-ops { display: flex; flex-direction: column; gap: 3px; }
-  .top-op-row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
-  .top-op-name { color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
-  .top-op-val  { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-hi); flex-shrink: 0; }
-
-  /* projeção + hora fechada */
-  .proj-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    padding: 8px 12px 6px;
     gap: 6px;
   }
 
-  .proj-box {
-    background: rgba(0,0,0,.25);
-    border: 1px solid var(--border);
+  /* ── HEADER ── */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border); padding-bottom: 6px;
+  }
+
+  .logo { font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700; color: var(--accent); }
+  .logo span { color: var(--text-dim); }
+  .facility { font-size: 11px; letter-spacing: 2.5px; color: var(--text-dim); text-transform: uppercase; margin-left: 10px; }
+
+  .hdr-kpis { display: flex; align-items: center; gap: 24px; }
+
+  .kpi { display: flex; flex-direction: column; align-items: flex-end; }
+  .kpi .lbl { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); }
+  .kpi .val { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700; line-height: 1; color: var(--text-hi); }
+  .kpi .val.accent { color: var(--accent); }
+  .kpi .val.green  { color: var(--green); }
+  .kpi .val.yellow { color: var(--yellow); }
+
+  .hora-badge {
+    background: rgba(0,212,255,.1);
+    border: 1px solid rgba(0,212,255,.3);
     border-radius: 3px;
-    padding: 6px 8px;
+    padding: 2px 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+
+  .clock { font-family: 'Space Mono', monospace; font-size: 28px; font-weight: 700; color: var(--text-hi); letter-spacing: 2px; }
+
+  /* ── GRID DINÂMICO DE ESTEIRAS ── */
+  .esteiras-grid {
+    display: grid;
+    gap: 8px;
+    overflow: hidden;
+    /* colunas calculadas por JS conforme qtd de esteiras */
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
     display: flex;
     flex-direction: column;
-    gap: 1px;
+    overflow: hidden;
+    position: relative;
   }
 
-  .proj-box .pb-lbl {
-    font-size: 8px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--text-dim);
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
   }
 
-  .proj-box .pb-val {
+  .c-amarela::before  { background: var(--amarela);  box-shadow: 0 0 10px var(--amarela); }
+  .c-vermelha::before { background: var(--vermelha); box-shadow: 0 0 10px var(--vermelha); }
+  .c-rolete::before   { background: var(--rolete);   box-shadow: 0 0 10px var(--rolete); }
+  .c-analisar::before { background: var(--analisar); box-shadow: 0 0 10px var(--analisar); }
+  .c-branca::before   { background: var(--branca);   box-shadow: 0 0 10px var(--branca); }
+  .c-azul::before     { background: var(--azul);     box-shadow: 0 0 10px var(--azul); }
+  .c-outros::before   { background: var(--outros); }
+
+  /* cabeçalho do card */
+  .card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-title { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+  .c-amarela  .card-title { color: var(--amarela); }
+  .c-vermelha .card-title { color: var(--vermelha); }
+  .c-rolete   .card-title { color: var(--rolete); }
+  .c-analisar .card-title { color: var(--analisar); }
+  .c-branca   .card-title { color: var(--branca); }
+  .c-azul     .card-title { color: var(--azul); }
+  .c-outros   .card-title { color: var(--outros); }
+
+  .badge { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; padding: 2px 8px; border-radius: 2px; text-transform: uppercase; }
+  .b-ok   { background: rgba(0,230,118,.15); color: var(--green); }
+  .b-warn { background: rgba(255,214,0,.15);  color: var(--yellow); }
+  .b-low  { background: rgba(255,61,90,.15);  color: var(--red); }
+  .b-na   { background: rgba(74,96,128,.15);  color: var(--text-dim); }
+
+  /* corpo */
+  .card-body { padding: 8px 12px; flex: 1; display: flex; flex-direction: column; gap: 7px; }
+
+  /* número grande — hora atual */
+  .hora-section { display: flex; flex-direction: column; }
+  .sec-label { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 1px; }
+
+  .num-row { display: flex; align-items: baseline; justify-content: space-between; }
+
+  .big-num {
     font-family: 'Space Mono', monospace;
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1;
+    font-size: 56px; font-weight: 700; line-height: 1;
+    color: var(--text-hi);
+    transition: color .4s;
+  }
+
+  .big-num.ok   { color: var(--green); }
+  .big-num.warn { color: var(--yellow); }
+  .big-num.low  { color: var(--red); }
+
+  .side-stats { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+  .side-item  { display: flex; flex-direction: column; align-items: flex-end; }
+  .side-lbl   { font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); }
+  .side-val   { font-family: 'Space Mono', monospace; font-size: 16px; color: var(--text-hi); line-height: 1; }
+
+  /* barra de progresso */
+  .prog-wrap { display: flex; flex-direction: column; gap: 3px; }
+  .prog-labels { display: flex; justify-content: space-between; font-size: 9px; color: var(--text-dim); font-family: 'Space Mono', monospace; }
+  .prog-track { height: 8px; background: var(--muted); border-radius: 2px; overflow: hidden; }
+  .prog-fill  { height: 100%; border-radius: 2px; transition: width .8s ease; }
+
+  .c-amarela  .prog-fill { background: var(--amarela); }
+  .c-vermelha .prog-fill { background: var(--vermelha); }
+  .c-rolete   .prog-fill { background: var(--rolete); }
+  .c-analisar .prog-fill { background: var(--analisar); }
+  .c-branca   .prog-fill { background: var(--branca); }
+  .c-azul     .prog-fill { background: var(--azul); }
+  .c-outros   .prog-fill { background: var(--outros); }
+
+  /* bloco projeção + hora fechada */
+  .proj-row { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+
+  .proj-box {
+    background: rgba(0,0,0,.3);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 5px 8px;
+    display: flex; flex-direction: column; gap: 1px;
+  }
+
+  .pb-lbl { font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); }
+  .pb-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 22px; font-weight: 700; line-height: 1;
     color: var(--text-hi);
   }
+  .pb-val.up   { color: var(--green); }
+  .pb-val.down { color: var(--red); }
+  .pb-val.mid  { color: var(--yellow); }
+  .pb-sub { font-size: 9px; color: var(--text-dim); }
 
-  .proj-box .pb-val.up   { color: var(--green); }
-  .proj-box .pb-val.down { color: var(--red); }
-  .proj-box .pb-val.same { color: var(--yellow); }
-
-  .proj-box .pb-sub {
-    font-size: 9px;
-    color: var(--text-dim);
-  }
-
-  /* seta tendência */
-  .trend { font-size: 13px; margin-left: 3px; vertical-align: middle; }
+  .trend { font-size: 12px; margin-left: 2px; }
   .trend.up   { color: var(--green); }
   .trend.down { color: var(--red); }
-  .trend.same { color: var(--yellow); }
+  .trend.mid  { color: var(--yellow); }
 
-  /* RIGHT COL */
-  .right-col { display: flex; flex-direction: column; gap: 8px; }
+  /* mini histórico */
+  .hist-section { display: flex; flex-direction: column; gap: 3px; flex: 1; justify-content: flex-end; }
+  .mini-chart { display: flex; align-items: flex-end; gap: 3px; height: 40px; }
+  .mb-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; height: 100%; justify-content: flex-end; }
+  .mb-bar { width: 100%; border-radius: 1px 1px 0 0; min-height: 3px; opacity: .5; transition: height .4s; }
+  .mb-bar.cur { opacity: 1; filter: brightness(1.4); }
+  .c-amarela  .mb-bar { background: var(--amarela); }
+  .c-vermelha .mb-bar { background: var(--vermelha); }
+  .c-rolete   .mb-bar { background: var(--rolete); }
+  .c-analisar .mb-bar { background: var(--analisar); }
+  .c-branca   .mb-bar { background: var(--branca); }
+  .c-azul     .mb-bar { background: var(--azul); }
+  .c-outros   .mb-bar { background: var(--outros); }
+  .mb-lbl { font-size: 8px; color: var(--text-dim); font-family: 'Space Mono', monospace; }
 
-  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-  .panel-head { padding: 8px 12px; border-bottom: 1px solid var(--border); font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); background: rgba(0,212,255,.03); }
+  .divider { height: 1px; background: var(--border); }
 
-  .hour-chart-wrap { padding: 10px 10px 6px; }
-  .hour-chart { display: flex; align-items: flex-end; gap: 3px; height: 72px; }
-  .h-grp { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; height: 100%; justify-content: flex-end; }
-  .h-bar { width: 100%; border-radius: 2px 2px 0 0; background: var(--accent); opacity: .5; min-height: 3px; transition: height .4s; }
-  .h-bar.current { opacity: 1; box-shadow: 0 0 8px rgba(0,212,255,.5); }
-  .h-lbl { font-size: 8px; color: var(--text-dim); font-family: 'Space Mono', monospace; }
-
-  .mini-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 12px; }
-  .mini-stat { display: flex; flex-direction: column; }
-  .mini-stat .ms-lbl { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); }
-  .mini-stat .ms-val { font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700; line-height: 1.1; color: var(--text-hi); }
-  .mini-stat .ms-val.green  { color: var(--green); }
-  .mini-stat .ms-val.accent { color: var(--accent); }
-  .mini-stat .ms-val.yellow { color: var(--yellow); }
-
-  .rank-list { padding: 4px 0; }
-  .rank-row { display: flex; align-items: center; padding: 5px 12px; border-bottom: 1px solid rgba(30,39,51,.5); gap: 8px; }
-  .rank-n { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); width: 16px; flex-shrink: 0; }
-  .rank-n.gold   { color: #ffd600; }
-  .rank-n.silver { color: #b0bec5; }
-  .rank-n.bronze { color: #a1887f; }
-  .rank-name { flex: 1; font-size: 12px; color: var(--text-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .rank-val  { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--green); flex-shrink: 0; }
-
-  /* dot */
-  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; animation: pulse 2s ease-in-out infinite; }
-  .dot.green { background: var(--green); box-shadow: 0 0 5px var(--green); }
-
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
-
-  /* FOOTER */
+  /* ── FOOTER ── */
   footer {
     display: flex; align-items: center; justify-content: space-between;
-    border-top: 1px solid var(--border); padding-top: 6px;
-    font-size: 10px; color: var(--text-dim); font-family: 'Space Mono', monospace;
+    border-top: 1px solid var(--border); padding-top: 5px;
+    font-size: 10px; color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
   }
-  .footer-left { display: flex; gap: 20px; align-items: center; }
+  .footer-left { display: flex; gap: 16px; align-items: center; }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 4px; animation: pulse 2s ease-in-out infinite; }
+  .dot.green  { background: var(--green);  box-shadow: 0 0 5px var(--green); }
+  .dot.red    { background: var(--red);    box-shadow: 0 0 5px var(--red); }
   .flash { color: var(--accent); opacity: 0; transition: opacity .3s; }
   .flash.show { opacity: 1; }
+
+  /* erro */
+  .erro-banner {
+    position: fixed; bottom: 56px; left: 50%; transform: translateX(-50%);
+    background: rgba(255,61,90,.15); border: 1px solid var(--red);
+    border-radius: 4px; padding: 8px 20px;
+    font-family: 'Space Mono', monospace; font-size: 11px; color: var(--red);
+    display: none; z-index: 100;
+  }
+  .erro-banner.show { display: block; }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
 </style>
 </head>
 <body>
 <div class="shell">
 
   <header>
-    <div style="display:flex;align-items:baseline">
+    <div style="display:flex;align-items:baseline;gap:10px">
       <div class="logo">SPX<span>·</span>OPS</div>
       <div class="facility">SoC_BA · Simões Filho</div>
     </div>
     <div class="hdr-kpis">
-      <div class="kpi"><span class="lbl">Total Dia</span><span class="val accent" id="hdr-total">—</span></div>
-      <div class="kpi"><span class="lbl">Hora Atual</span><span class="val green" id="hdr-hora">—</span></div>
-      <div class="kpi"><span class="lbl">Meta Hora</span><span class="val" id="hdr-meta">—</span></div>
-      <div class="kpi"><span class="lbl">Projeção Geral</span><span class="val" id="hdr-proj" style="color:var(--orange)">—</span></div>
+      <div class="kpi">
+        <span class="lbl">Total Dia</span>
+        <span class="val accent" id="hdr-total">—</span>
+      </div>
+      <div class="kpi">
+        <span class="lbl">Hora Atual</span>
+        <span class="val green" id="hdr-hora">—</span>
+      </div>
+      <div class="kpi">
+        <span class="lbl">Meta Hora</span>
+        <span class="val" id="hdr-meta">—</span>
+      </div>
+      <div class="kpi">
+        <span class="lbl">Projeção</span>
+        <span class="val yellow" id="hdr-proj">—</span>
+      </div>
+      <div class="kpi">
+        <span class="lbl">% Meta</span>
+        <span class="val" id="hdr-pct">—</span>
+      </div>
+      <div id="hora-badge" class="hora-badge">H —</div>
       <div class="clock" id="clock">--:--:--</div>
     </div>
   </header>
 
-  <div class="main" id="main-grid">
-    <div class="right-col" id="right-col" style="display:none">
-      <div class="panel">
-        <div class="panel-head">Produção por Hora</div>
-        <div class="hour-chart-wrap"><div class="hour-chart" id="hour-chart"></div></div>
-      </div>
-      <div class="panel">
-        <div class="mini-stats">
-          <div class="mini-stat"><span class="ms-lbl">Melhor Hora</span><span class="ms-val green" id="best-h-val">—</span><span style="font-size:10px;color:var(--text-dim)" id="best-h-lbl">—</span></div>
-          <div class="mini-stat"><span class="ms-lbl">% Meta</span><span class="ms-val yellow" id="pct-meta">—</span></div>
-          <div class="mini-stat"><span class="ms-lbl">Esteiras OK</span><span class="ms-val accent" id="ok-count">—</span></div>
-          <div class="mini-stat"><span class="ms-lbl">Em Atenção</span><span class="ms-val" style="color:var(--red)" id="warn-count">—</span></div>
-        </div>
-      </div>
-      <div class="panel" style="flex:1;overflow:hidden">
-        <div class="panel-head">Top Operadores</div>
-        <div class="rank-list" id="rank-list"></div>
-      </div>
-    </div>
-  </div>
+  <div class="esteiras-grid" id="esteiras-grid"></div>
 
   <footer>
     <div class="footer-left">
-      <span><span class="dot green"></span>ONLINE</span>
+      <span><span class="dot green" id="status-dot"></span><span id="status-txt">ONLINE</span></span>
       <span id="fonte-label">SIMULAÇÃO</span>
       <span id="last-update">—</span>
     </div>
-    <div style="display:flex;align-items:center;gap:16px">
+    <div style="display:flex;align-items:center;gap:14px">
       <span class="flash" id="flash">↻ ATUALIZADO</span>
       <span>PRÓXIMO: <span id="countdown">180</span>s</span>
     </div>
   </footer>
 </div>
 
+<div class="erro-banner" id="erro-banner"></div>
+
 <script>
-// ═══════════════════════════════════════
-//  CONFIGURAÇÃO
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════
+//  CONFIGURAÇÃO — edite após implantar o Apps Script
+// ═══════════════════════════════════════════════
 const CONFIG = {
-  apiUrl:     'https://script.google.com/macros/s/AKfycbynjToNnUF7zF9G7sCzZXHpCG8Ud9RpH3idKA5pk0bUYwrIuC_6F9Ru_JoceoeRQ3oz/exec',
+  apiUrl:     'SUA_URL_DO_APPS_SCRIPT_AQUI',
   refreshSec: 180,
-  useMock:    false,
+  useMock:    true,   // → false quando a URL estiver configurada
 };
 
-// ── helpers ─────────────────────────────
-function classEsteira(nome) {
+// ── HELPERS ─────────────────────────────────────
+function classCard(nome) {
   const n = (nome || '').toLowerCase();
-  if (n.includes('amarela'))  return 'amarela';
-  if (n.includes('vermelha')) return 'vermelha';
-  if (n.includes('rolete'))   return 'rolete';
-  if (n.includes('anali'))    return 'analisar';
-  return 'outros';
+  if (n.includes('amarela'))  return 'c-amarela';
+  if (n.includes('vermelha')) return 'c-vermelha';
+  if (n.includes('rolete'))   return 'c-rolete';
+  if (n.includes('anali'))    return 'c-analisar';
+  if (n.includes('branca'))   return 'c-branca';
+  if (n.includes('azul'))     return 'c-azul';
+  return 'c-outros';
 }
 
 function nomeEsteira(nome) {
@@ -328,256 +331,281 @@ function nomeEsteira(nome) {
 }
 
 function badge(pct) {
-  if (pct === null || pct === undefined) return '<span class="status-badge badge-na">S/META</span>';
-  if (pct >= 85) return '<span class="status-badge badge-ok">OK</span>';
-  if (pct >= 60) return '<span class="status-badge badge-warn">ATENÇÃO</span>';
-  return '<span class="status-badge badge-low">BAIXO</span>';
+  if (pct == null) return '<span class="badge b-na">S/META</span>';
+  if (pct >= 85)   return '<span class="badge b-ok">OK</span>';
+  if (pct >= 60)   return '<span class="badge b-warn">ATENÇÃO</span>';
+  return '<span class="badge b-low">BAIXO</span>';
 }
 
-// ── render cards ────────────────────────
-function renderCards(data) {
-  const grid     = document.getElementById('main-grid');
-  const rightCol = document.getElementById('right-col');
+function numClass(pct) {
+  if (pct == null) return '';
+  if (pct >= 85)   return 'ok';
+  if (pct >= 60)   return 'warn';
+  return 'low';
+}
 
-  [...grid.children].forEach(c => { if (c.id !== 'right-col') c.remove(); });
+// ── GRID DINÂMICO ────────────────────────────────
+// Calcula colunas ideais para o número de esteiras
+function calcCols(n) {
+  if (n <= 2) return n;
+  if (n <= 4) return n;
+  if (n <= 6) return 3;
+  if (n <= 8) return 4;
+  return Math.ceil(n / 2);
+}
 
-  data.esteiras.forEach(est => {
-    const cls  = classEsteira(est.estacao);
+// ── RENDER ESTEIRAS ──────────────────────────────
+function renderEsteiras(data) {
+  const grid = document.getElementById('esteiras-grid');
+
+  // filtra esteiras com 0 total e sem operadores (provavelmente inativas hoje)
+  const ativas = data.esteiras.filter(e =>
+    e.totalDia > 0 || e.horaAtual > 0 || (e.topOperadores && e.topOperadores.length > 0)
+  );
+
+  const cols = calcCols(ativas.length || data.esteiras.length);
+  const list = ativas.length ? ativas : data.esteiras;
+
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+  grid.innerHTML = '';
+
+  const now      = new Date();
+  const minDecor = now.getMinutes() + now.getSeconds() / 60;
+
+  list.forEach(est => {
+    const cls  = classCard(est.estacao);
     const pct  = est.pctMeta;
     const pctW = pct != null ? Math.min(100, pct) : 0;
+    const nc   = numClass(pct);
 
+    // projeção
+    const proj = minDecor > 0 ? Math.round(est.horaAtual / minDecor * 60) : est.horaAtual;
+
+    // hora anterior fechada
+    const horaAnt    = data.horaAtual - 1;
+    const horaFech   = est.historico.find(h => h.hora === horaAnt);
+    const valFech    = horaFech ? horaFech.total : null;
+
+    // tendência
+    let trendCls = 'mid', trendSeta = '→';
+    if (valFech != null && valFech > 0) {
+      const diff = proj - valFech;
+      if (diff > valFech * 0.05)        { trendCls = 'up';   trendSeta = '↑'; }
+      else if (diff < -(valFech * 0.05)) { trendCls = 'down'; trendSeta = '↓'; }
+    }
+
+    // proj vs meta
+    let projCls = 'mid';
+    if (est.metaHora > 0) {
+      if (proj >= est.metaHora * 0.85)    projCls = 'up';
+      else if (proj < est.metaHora * 0.6) projCls = 'down';
+    }
+
+    // mini histórico
     const maxH = Math.max(...est.historico.map(h => h.total), 1);
     const miniBars = est.historico.map(h => {
       const p   = (h.total / maxH * 100).toFixed(1);
       const cur = h.hora === data.horaAtual;
-      return `<div class="mini-bar-group">
-        <div class="mini-bar${cur ? ' current' : ''}" style="height:${p}%"></div>
-        <div class="mini-h-lbl">${String(h.hora).padStart(2,'0')}</div>
+      return `<div class="mb-group">
+        <div class="mb-bar${cur ? ' cur' : ''}" style="height:${p}%"></div>
+        <div class="mb-lbl">${String(h.hora).padStart(2,'0')}</div>
       </div>`;
     }).join('');
 
-    const topOpsHtml = est.topOperadores.map(op =>
-      `<div class="top-op-row">
-        <span class="top-op-name">${op.nome}</span>
-        <span class="top-op-val">${op.qtd.toLocaleString('pt-BR')}</span>
-      </div>`
-    ).join('');
-
-    // ── projeção da hora cheia ──────────────────────────────
-    const now         = new Date();
-    const minDecor    = now.getMinutes() + (now.getSeconds() / 60);
-    const minRestantes = 60 - minDecor;
-    const projecao    = minDecor > 0
-      ? Math.round((est.horaAtual / minDecor) * 60)
-      : est.horaAtual;
-
-    // hora anterior fechada (hora - 1)
-    const horaAnterior  = data.horaAtual - 1;
-    const horaFechada   = est.historico.find(h => h.hora === horaAnterior);
-    const valorFechado  = horaFechada ? horaFechada.total : null;
-
-    // tendência: projeção vs hora fechada anterior
-    let trendClass = 'same', trendSeta = '→';
-    if (valorFechado != null) {
-      const diff = projecao - valorFechado;
-      if (diff > valorFechado * 0.05)       { trendClass = 'up';   trendSeta = '↑'; }
-      else if (diff < -(valorFechado * 0.05)) { trendClass = 'down'; trendSeta = '↓'; }
-    }
-
-    // projeção vs meta
-    let projClass = 'same';
-    if (est.metaHora > 0) {
-      if (projecao >= est.metaHora * 0.85)   projClass = 'up';
-      else if (projecao < est.metaHora * 0.6) projClass = 'down';
-      else                                     projClass = 'same';
-    }
-
     const card = document.createElement('div');
-    card.className = `esteira-card ${cls}`;
+    card.className = `card ${cls}`;
     card.innerHTML = `
       <div class="card-head">
         <span class="card-title">${nomeEsteira(est.estacao)}</span>
         ${badge(pct)}
       </div>
       <div class="card-body">
-        <div>
-          <div class="big-label">HORA ATUAL (${String(data.horaAtual).padStart(2,'0')}h)</div>
-          <div class="big-row">
-            <div class="big-num">${est.horaAtual.toLocaleString('pt-BR')}</div>
-            <div>
-              <div class="big-label" style="text-align:right">ACUMULADO</div>
-              <div class="big-sub">${est.totalDia.toLocaleString('pt-BR')}</div>
+
+        <div class="hora-section">
+          <div class="sec-label">HORA ${String(data.horaAtual).padStart(2,'0')}:00</div>
+          <div class="num-row">
+            <div class="big-num ${nc}">${est.horaAtual.toLocaleString('pt-BR')}</div>
+            <div class="side-stats">
+              <div class="side-item">
+                <span class="side-lbl">ACUMULADO</span>
+                <span class="side-val">${est.totalDia.toLocaleString('pt-BR')}</span>
+              </div>
+              <div class="side-item">
+                <span class="side-lbl">META</span>
+                <span class="side-val">${est.metaHora > 0 ? est.metaHora.toLocaleString('pt-BR') : '—'}</span>
+              </div>
             </div>
           </div>
         </div>
-        <div class="prog-area">
+
+        <div class="prog-wrap">
           <div class="prog-labels">
-            <span>${pct != null ? pct + '% meta' : 'sem meta'}</span>
-            <span>alvo: ${est.metaHora > 0 ? est.metaHora.toLocaleString('pt-BR') : '—'}</span>
+            <span>${pct != null ? pct + '%' : 'sem meta'}</span>
+            <span>${pct != null ? (pct >= 85 ? '✓ no alvo' : pct >= 60 ? '⚠ abaixo' : '✗ crítico') : ''}</span>
           </div>
           <div class="prog-track"><div class="prog-fill" style="width:${pctW}%"></div></div>
         </div>
+
         <div class="divider"></div>
+
         <div class="proj-row">
           <div class="proj-box">
-            <span class="pb-lbl">⟳ Projeção Hora Cheia</span>
-            <span class="pb-val ${projClass}">${projecao.toLocaleString('pt-BR')}<span class="trend ${trendClass}">${trendSeta}</span></span>
-            <span class="pb-sub">ritmo: ${Math.round(est.horaAtual / Math.max(1, minDecor))}/min · ${Math.round(minRestantes)}min restantes</span>
+            <span class="pb-lbl">⟳ Projeção hora cheia</span>
+            <span class="pb-val ${projCls}">${proj.toLocaleString('pt-BR')}<span class="trend ${trendCls}">${trendSeta}</span></span>
+            <span class="pb-sub">${Math.round(est.horaAtual / Math.max(1, minDecor))}/min · ${Math.round(60 - minDecor)}min rest.</span>
           </div>
           <div class="proj-box">
-            <span class="pb-lbl">✓ Hora ${horaAnterior > 0 ? String(horaAnterior).padStart(2,'0')+'h (fechada)' : 'anterior'}</span>
-            <span class="pb-val">${valorFechado != null ? valorFechado.toLocaleString('pt-BR') : '—'}</span>
-            <span class="pb-sub">${valorFechado != null && est.metaHora > 0 ? Math.round(valorFechado / est.metaHora * 100) + '% da meta' : 'sem referência'}</span>
+            <span class="pb-lbl">✓ H${String(horaAnt).padStart(2,'0')} fechada</span>
+            <span class="pb-val">${valFech != null ? valFech.toLocaleString('pt-BR') : '—'}</span>
+            <span class="pb-sub">${valFech != null && est.metaHora > 0 ? Math.round(valFech / est.metaHora * 100) + '% da meta' : '—'}</span>
           </div>
         </div>
+
         <div class="divider"></div>
-        <div>
-          <div class="section-label">Histórico do Turno</div>
-          <div class="mini-chart">${miniBars}</div>
+
+        <div class="hist-section">
+          <div class="sec-label">TURNO</div>
+          <div class="mini-chart">${miniBars || '<span style="color:var(--text-dim);font-size:11px">sem histórico</span>'}</div>
         </div>
-        <div>
-          <div class="section-label">Top Operadores</div>
-          <div class="top-ops">${topOpsHtml || '<span style="font-size:11px;color:var(--text-dim)">sem dados</span>'}</div>
-        </div>
+
       </div>
     `;
-    grid.insertBefore(card, rightCol);
+    grid.appendChild(card);
   });
-
-  rightCol.style.display = 'flex';
 }
 
-function renderKPIs(data) {
+// ── RENDER KPIs HEADER ───────────────────────────
+function renderHeader(data) {
+  const now      = new Date();
+  const minDecor = now.getMinutes() + now.getSeconds() / 60;
+  const projGeral = minDecor > 0
+    ? Math.round(data.totalGeralHora / minDecor * 60)
+    : data.totalGeralHora;
+
   document.getElementById('hdr-total').textContent = data.totalGeralDia.toLocaleString('pt-BR');
   document.getElementById('hdr-hora').textContent  = data.totalGeralHora.toLocaleString('pt-BR');
   document.getElementById('hdr-meta').textContent  = data.metaHoraAtual > 0 ? data.metaHoraAtual.toLocaleString('pt-BR') : '—';
+  document.getElementById('hdr-proj').textContent  = projGeral.toLocaleString('pt-BR');
+  document.getElementById('hora-badge').textContent = `H${String(data.horaAtual).padStart(2,'0')}`;
 
-  // projeção geral
-  const now      = new Date();
-  const minDecor = now.getMinutes() + (now.getSeconds() / 60);
-  const projGeral = minDecor > 0 ? Math.round((data.totalGeralHora / minDecor) * 60) : data.totalGeralHora;
-  document.getElementById('hdr-proj').textContent = projGeral.toLocaleString('pt-BR');
-  // cor baseada na meta
+  const pctGeral = data.metaHoraAtual > 0
+    ? Math.round(data.totalGeralHora / data.metaHoraAtual * 100) : null;
+
+  const pctEl = document.getElementById('hdr-pct');
+  pctEl.textContent = pctGeral != null ? pctGeral + '%' : '—';
+  pctEl.style.color = pctGeral == null ? '' : pctGeral >= 85 ? 'var(--green)' : pctGeral >= 60 ? 'var(--yellow)' : 'var(--red)';
+
   const projEl = document.getElementById('hdr-proj');
   if (data.metaHoraAtual > 0) {
     const r = projGeral / data.metaHoraAtual;
     projEl.style.color = r >= 0.85 ? 'var(--green)' : r >= 0.6 ? 'var(--yellow)' : 'var(--red)';
   }
-
-  const pctG = data.metaHoraAtual > 0 ? Math.round(data.totalGeralHora / data.metaHoraAtual * 100) : null;
-  document.getElementById('pct-meta').textContent = pctG != null ? pctG + '%' : '—';
-
-  document.getElementById('ok-count').textContent   = data.esteiras.filter(e => e.pctMeta != null && e.pctMeta >= 85).length;
-  document.getElementById('warn-count').textContent = data.esteiras.filter(e => e.pctMeta != null && e.pctMeta < 60).length;
 }
 
-function renderHourChart(data) {
-  const chart = document.getElementById('hour-chart');
-  chart.innerHTML = '';
-  const hist = data.historicoGeral;
-  const max  = Math.max(...hist.map(h => h.total), 1);
-
-  hist.forEach(h => {
-    const p   = (h.total / max * 100).toFixed(1);
-    const cur = h.hora === data.horaAtual;
-    const div = document.createElement('div');
-    div.className = 'h-grp';
-    div.innerHTML = `<div class="h-bar${cur ? ' current' : ''}" style="height:${p}%"></div><div class="h-lbl">${String(h.hora).padStart(2,'0')}</div>`;
-    chart.appendChild(div);
-  });
-
-  const best = hist.reduce((a, b) => a.total > b.total ? a : b, { hora: 0, total: 0 });
-  document.getElementById('best-h-val').textContent = best.total.toLocaleString('pt-BR');
-  document.getElementById('best-h-lbl').textContent = `${String(best.hora).padStart(2,'0')}:00h`;
-}
-
-function renderTopOps(data) {
-  const agg = {};
-  data.esteiras.forEach(est => {
-    est.topOperadores.forEach(op => { agg[op.nome] = (agg[op.nome] || 0) + op.qtd; });
-  });
-
-  const sorted  = Object.entries(agg).sort((a, b) => b[1] - a[1]).slice(0, 8);
-  const medals  = ['gold', 'silver', 'bronze'];
-  const nums    = ['①', '②', '③'];
-
-  document.getElementById('rank-list').innerHTML = sorted.map(([nome, qtd], i) => `
-    <div class="rank-row">
-      <span class="rank-n ${medals[i] || ''}">${nums[i] || (i + 1)}</span>
-      <span class="rank-name">${nome}</span>
-      <span class="rank-val">${qtd.toLocaleString('pt-BR')}</span>
-    </div>
-  `).join('');
-}
-
-// ── mock ────────────────────────────────
+// ── MOCK DATA ────────────────────────────────────
 function gerarMock() {
-  const hora     = new Date().getHours();
-  const esteiras = ['Esteira Amarela', 'Esteira Vermelha', 'Esteira Rolete', 'Analisar Esteiras'];
+  const hora = new Date().getHours();
+  const ESTEIRAS = [
+    'Esteira Amarela', 'Esteira Vermelha', 'Esteira Rolete',
+    'Analisar Esteiras', 'Esteira Branca', 'Esteira Azul'
+  ];
   const metaHora = 450;
   const historicoGeral = {};
 
-  const dadosEsteiras = esteiras.map(nome => {
-    const pctPerf   = 0.55 + Math.random() * 0.65;
-    const horaAtual = Math.round(metaHora * pctPerf);
+  const esteiras = ESTEIRAS.map(nome => {
+    const perf      = 0.5 + Math.random() * 0.7;
+    const horaAtual = Math.round(metaHora * perf);
     const historico = [];
 
     for (let h = 8; h <= Math.min(hora, 21); h++) {
       const v = Math.round(metaHora * (0.5 + Math.random() * 0.8));
-      historico.push({ hora: h, total: v });
+      historico.push({ hora: h, total: v, meta: metaHora });
       historicoGeral[h] = (historicoGeral[h] || 0) + v;
     }
 
-    const nomes = ['ANA LENIRA', 'JESSICA VIANA', 'JHONATA MOURA', 'MARCELO JUNIOR', 'LUANA ARAUJO'];
-    const topOperadores = nomes.slice(0, 3).map(n => ({ nome: n, qtd: Math.round(80 + Math.random() * 200) }));
-
     return {
       estacao: nome, horaAtual,
-      totalDia: Math.round(horaAtual * Math.max(1, hora - 7) * (0.8 + Math.random() * 0.3)),
+      totalDia: Math.round(horaAtual * Math.max(1, hora - 7) * (0.8 + Math.random() * 0.4)),
       metaHora, pctMeta: Math.round(horaAtual / metaHora * 100),
-      topOperadores, historico
+      topOperadores: [], historico
     };
   });
 
   return {
     timestamp: new Date().toISOString(),
-    horaAtual: hora, metaHoraAtual: metaHora * esteiras.length,
-    totalGeralDia:  dadosEsteiras.reduce((s, e) => s + e.totalDia, 0),
-    totalGeralHora: dadosEsteiras.reduce((s, e) => s + e.horaAtual, 0),
-    esteiras: dadosEsteiras,
+    horaReal: hora, horaAtual: hora,
+    metaHoraAtual: metaHora * ESTEIRAS.length,
+    totalGeralDia:  esteiras.reduce((s, e) => s + e.totalDia, 0),
+    totalGeralHora: esteiras.reduce((s, e) => s + e.horaAtual, 0),
+    esteiras,
     historicoGeral: Object.entries(historicoGeral)
       .map(([h, v]) => ({ hora: parseInt(h), total: v }))
       .sort((a, b) => a.hora - b.hora)
   };
 }
 
-// ── fetch real ──────────────────────────
-async function fetchDados() {
-  const res  = await fetch(CONFIG.apiUrl);
-  const data = await res.json();
-  if (data.erro) throw new Error(data.erro);
-  return data;
+// ── FETCH REAL via JSONP (contorna CORS do Apps Script) ──
+function fetchDados() {
+  return new Promise((resolve, reject) => {
+    const cbName = 'spx_cb_' + Date.now();
+    const script = document.createElement('script');
+    const timeout = setTimeout(() => {
+      cleanup();
+      reject(new Error('Timeout JSONP'));
+    }, 20000);
+
+    function cleanup() {
+      clearTimeout(timeout);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+    }
+
+    window[cbName] = function(data) {
+      cleanup();
+      if (data.erro) reject(new Error(data.erro));
+      else resolve(data);
+    };
+
+    script.src = CONFIG.apiUrl + '?callback=' + cbName;
+    script.onerror = () => { cleanup(); reject(new Error('Erro JSONP')); };
+    document.head.appendChild(script);
+  });
 }
 
-// ── load ────────────────────────────────
+// ── LOAD ─────────────────────────────────────────
 async function loadData() {
   try {
     const data = CONFIG.useMock ? gerarMock() : await fetchDados();
-    renderCards(data);
-    renderKPIs(data);
-    renderHourChart(data);
-    renderTopOps(data);
+
+    renderEsteiras(data);
+    renderHeader(data);
 
     document.getElementById('last-update').textContent =
       'atualizado ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    document.getElementById('fonte-label').textContent = CONFIG.useMock ? 'SIMULAÇÃO' : 'APPS SCRIPT';
+    document.getElementById('fonte-label').textContent =
+      CONFIG.useMock ? 'SIMULAÇÃO' : 'APPS SCRIPT';
+
+    // limpa erro se estava mostrando
+    document.getElementById('erro-banner').classList.remove('show');
+    document.getElementById('status-dot').className = 'dot green';
+    document.getElementById('status-txt').textContent = 'ONLINE';
 
     const f = document.getElementById('flash');
     f.classList.add('show');
     setTimeout(() => f.classList.remove('show'), 2500);
-  } catch (e) { console.error('Erro:', e); }
+
+  } catch (e) {
+    console.error('Erro ao carregar:', e);
+    const banner = document.getElementById('erro-banner');
+    banner.textContent = '⚠ ERRO AO CARREGAR DADOS: ' + e.message;
+    banner.classList.add('show');
+    document.getElementById('status-dot').className = 'dot red';
+    document.getElementById('status-txt').textContent = 'ERRO';
+  }
 }
 
+// ── CLOCK ────────────────────────────────────────
 function updateClock() {
   document.getElementById('clock').textContent =
     new Date().toLocaleTimeString('pt-BR', { hour12: false });
@@ -585,6 +613,7 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
+// ── COUNTDOWN ────────────────────────────────────
 let cd = CONFIG.refreshSec;
 setInterval(() => {
   cd--;
